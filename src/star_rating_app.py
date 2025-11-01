@@ -2,8 +2,8 @@
 Homework 5: Star Rating App
 ===========================
 Course:   CS 5001
-Student:  YOUR NAME
-Semester: YOUR SEMESTER
+Student:  Melanie Lochrie
+Semester: Fall 2025
 
 An application that queries the client for movie titles
 and a rating for each movie.
@@ -40,7 +40,7 @@ __LIST_COMMAND = "list"
 __EXIT_COMMAND = "exit"
 
 # you can use this list for something like the following
-# if command in _FILTER_OPERATION_OPTIONS:  
+# if command in _FILTER_OPERATION_OPTIONS:
 #    do something
 # else:
 #    assume it is a movie title
@@ -74,7 +74,10 @@ def convert_str_movie_tuple(val: str) -> Tuple[str, int]:
     Returns:
         Tuple[str, int]: Movie and int rating 
     """
-    pass
+    title_str, rating_str = val.split(',')
+    title = clean_title(title_str)
+    rating = int(rating_str)
+    return (title, rating)
 
 
 def clean_title(movie: str) -> str:
@@ -98,7 +101,7 @@ def clean_title(movie: str) -> str:
     Returns:
         str : the movie in title case, and leading and trailing spaces removed
     """
-    pass
+    return string.capwords(movie.strip())
 
 
 def convert_rating(val: int, min_stars: int = __MIN_STARS, max_stars: int = __MAX_STARS) -> str:
@@ -115,7 +118,12 @@ def convert_rating(val: int, min_stars: int = __MIN_STARS, max_stars: int = __MA
     Returns:
         str: stars between min_stars and max_stars
     """
-    pass
+    if val < min_stars:  # ensures the rating stays within min limits
+        val = min_stars
+    elif val > max_stars:  # ensures the rating stays within max limits
+        val = max_stars
+
+    return "★" * val  # returns a string of stars equal to the rating value
 
 
 def check_filter(movie: Tuple[str, int], filter: str) -> bool:
@@ -154,7 +162,27 @@ def check_filter(movie: Tuple[str, int], filter: str) -> bool:
     Returns:
         bool: True the movie meets the filter requirements.
     """
-    pass
+    title, rating = movie
+    filter = filter.strip()
+
+    if filter == "":  # if filter is empty, always return true
+        return True
+
+    if filter[0] == ">":
+        number = int(filter[1:])
+        return rating > number
+    elif filter[0] == "<":
+        number = int(filter[1:])
+        return rating < number
+    elif filter[0] == "=":
+        number = int(filter[1:])
+        return rating == number
+
+    # does the word the user typed appear anywhere inside the movie title? If yes ,return true. If no, return false.
+    if filter.lower() in title.lower():
+        return True
+
+    return False  # if none of the above match, return false
 
 
 def print_movies(movies: List[Tuple[str, int]], filter: str = '', spacer: int = __SPACER, max_stars: int = __MAX_STARS) -> None:
@@ -177,10 +205,15 @@ def print_movies(movies: List[Tuple[str, int]], filter: str = '', spacer: int = 
         spacer (int, optional): The number of spaces between the stars and the movie title. Defaults to __SPACER.
         max_stars (int, optional): The maximum number of stars to print, used for spacing purposes. Defaults to __MAX_STARS.
     """
-    pass
-
+    for movie, rating in movies:
+        # It only prints movies that pass the filter, if true then print
+        if check_filter((movie, rating), filter):
+            # formatted output becomes stars + spaces + movie title
+            print(f"{convert_rating(rating):<{max_stars + spacer}}{movie}")
 
 # No need to modify the following code
+
+
 def menu() -> Tuple[str, str]:
     """
     Prompts the client for their command.
@@ -194,14 +227,15 @@ def menu() -> Tuple[str, str]:
         the empty string if there was no value.
     """
     check = input(__PROMPT).strip()
-    command, *rest = check.split()  # this unpacks the string split by spaces into a variable, and a list of values
+    # this unpacks the string split by spaces into a variable, and a list of values
+    command, *rest = check.split()
     command = command.casefold()
     while command not in [__ADD_COMMAND, __LIST_COMMAND, __EXIT_COMMAND]:
         print(__HELP_MESSAGE)
         check = input(__PROMPT).strip()
         command, *rest = check.split()
-        command = command.casefold()    
-    return command, " ".join(rest) 
+        command = command.casefold()
+    return command, " ".join(rest)
 
 
 def run() -> None:
@@ -224,3 +258,11 @@ def run() -> None:
 
 if __name__ == "__main__":
     run()
+
+
+# print(convert_str_movie_tuple("v,5"))
+# print(convert_str_movie_tuple("Princess bride  ,10"))
+# print(convert_str_movie_tuple("   JurAssic shARk  ,    1  "))
+# print(clean_title("     v"))
+# print(clean_title("Princess bride  "))
+# print(clean_title("it's a wonderful life"))
