@@ -123,7 +123,7 @@ def convert_rating(val: int, min_stars: int = __MIN_STARS, max_stars: int = __MA
     elif val > max_stars:  # ensures the rating stays within max limits
         val = max_stars
 
-    return "★" * val  # returns a string of stars equal to the rating value
+    return "*" * val  # returns a string of stars equal to the rating value
 
 
 def check_filter(movie: Tuple[str, int], filter: str) -> bool:
@@ -168,21 +168,32 @@ def check_filter(movie: Tuple[str, int], filter: str) -> bool:
     if filter == "":  # if filter is empty, always return true
         return True
 
-    if filter[0] == ">":
-        number = int(filter[1:])
+    if filter.startswith(">="):  # for two character operators
+        number = int(filter[2:].strip())
+        return rating >= number
+    elif filter.startswith("<="):
+        number = int(filter[2:].strip())
+        return rating <= number
+    elif filter.startswith("!="):
+        number = int(filter[2:].strip())
+        return rating != number
+
+    # for single character operators
+    elif filter.startswith(">"):
+        number = int(filter[1:].strip())
         return rating > number
-    elif filter[0] == "<":
-        number = int(filter[1:])
+    elif filter.startswith("<"):
+        number = int(filter[1:].strip())
         return rating < number
-    elif filter[0] == "=":
-        number = int(filter[1:])
+    elif filter.startswith("="):
+        number = int(filter[1:].strip())
         return rating == number
 
     # does the word the user typed appear anywhere inside the movie title? If yes ,return true. If no, return false.
     if filter.lower() in title.lower():
         return True
 
-    return False  # if none of the above match, return false
+    return False
 
 
 def print_movies(movies: List[Tuple[str, int]], filter: str = '', spacer: int = __SPACER, max_stars: int = __MAX_STARS) -> None:
