@@ -1,16 +1,19 @@
 # Homework 05 Report
 
 1. What does the `in` operator do? Provide examples of the `in` using strings and lists (or tuples). 
+    The in operator checks whether a value exists inside another object, like a string, list, or tuple. It returns a Boolean value( True or False). 
    
 2. Taking a moment to research, why would one want to use .casefold() instead of .lower() in python when comparing strings? Please include the reference on where you find the information.
-   
+   According to w3schoolsm, it is better to use .casefol() instead of .lower() becayse .casefold() is more aggressive and handles more types of characters when comparing strings in Python. The .lower() method only works well for basic English letters, but .casefold() works with special or accented letters too. 
+   Reference: https://www.w3schools.com/python/ref_string_casefold.asp
 
 3. For each of the three sequential types you have learned (list, string, tuple) - label as mutable or immutable (refer to the team activity).
-   * string - 
-   * list - 
-   * tuple -
+   * string - immutable 
+   * list - mutable
+   * tuple - immutable
 
 4. Explain mutability and immutability in your own words.
+   Mutability means that something can be changed after it has been created. Immutability means that once it has been created, it cannot be changed. 
 
 5. Given the following code:
 
@@ -25,9 +28,12 @@
     ```
 
 * What is the output of the code above?
-  
-* Explain why the output is what it is.
+  The output of the code above is: 
+1
+1
 
+* Explain why the output is what it is.
+The first print(x) shows 1 because x=1 before the function was called. Inside the mystery_function(x) the line x = 100 only changes the local version of x that exists inside the function. It doesn't affect the x outside of it. 
 
 6. Given the following code:
 
@@ -41,13 +47,17 @@
     print(x)
     ```
 * What is the output of the code above? 
+The output is:
+[1, 2, 3]
+[100, 2, 3]
 
 * Explain why the output is what it is.
+During the first run, x is a list [1, 2, 3]. The first print(x) shows that list. Then, when mystery_function(x) is called. Inside the function, the code x[0] = 100 changes the first value in the list to 100. This is because lists are mutable. 
 
 7. Would happen if `x` was a tuple? What is generated when you try to run the code above with a tuple?
 
     ```
-    # put the error message here
+TypeError: 'tuple' object does not support item assignment
 
 
     ```
@@ -66,13 +76,15 @@
     ```
 
 * What is the output of the code above?
-
+(3, [1, 2, 3], [4, 5, 6])
+(3, [100, 2, 3], [4, 5, 6])
 
 ## Deeper Thinking
 
 We talked a lot about immutable and mutable. Why would this matter? Take a moment to describe in your own words why computers would care. Pay particular attention to how computers store data in memory, and how making something immutable may help with that storage.
 ---
-
+Mutability matters because it affects how data is stored and handled in memory. When something is mutable, like a list, Python has to keep track of where it is stored so it can be changed later. That means the same list can be updated without created a new copy each time. 
+When something is immutable, Python stores it in a fixed way. Meaning, if you try to change it, Python makes a brand-new object in memory instead of editing the old. one. This is matters becase it makes immutable objects safer to use because you know they can't be accidentally changed in a program. It also helps manage memory efficiently within Python because it can reuse the same value in multiple places without making copies. 
 
 ---
 
